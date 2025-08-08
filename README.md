@@ -151,7 +151,17 @@ python examples/simple_trainer.py mcmc --data_dir data/your_scene --data_factor 
 # Convert for Unity VR (optional)
 python plyconvert.py your_scene
 ```
+ffmpeg -i C:\MMP\gsplat\data\room2\room2.mp4 -vf fps=2 C:\MMP\gsplat\data\room2\frame_%04d.png
+mkdir images_2
+magick mogrify -path images_2 -resize 25%% images\*.jpg
 
+conda activate 3dgut
+colmap feature_extractor --database_path database.db --image_path images --ImageReader.camera_model SIMPLE_PINHOLE --ImageReader.single_camera 1
+colmap exhaustive_matcher --database_path database.db
+mkdir sparse
+colmap mapper --database_path database.db --image_path images --output_path sparse
+cd ../../
+python examples/simple_trainer.py mcmc --data_dir data/room2 --data_factor 1 --result_dir results/room2 --camera_model pinhole --save_ply --with_ut --with_eval3d 
 ### Performance Profiling
 ```bash
 # Profile memory usage and performance
